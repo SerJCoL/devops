@@ -1,7 +1,5 @@
-# Добавляем официальный репозиторий GitLab Runner
-curl -L --output /etc/apt/trusted.gpg.d/gitlab-runner.gpg https://packages.gitlab.com/gitlab/gitlab-runner/gpg.key
-echo "deb https://packages.gitlab.com/gitlab/gitlab-runner/ubuntu/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/gitlab-runner.list
-apt-get update
+# Add repository  GitLab Runner
+curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
 
-# Устанавливаем GitLab Runner
-apt-get install -y gitlab-runner
+# Install GitLab Runner
+sudo apt-get install -y gitlab-runner
