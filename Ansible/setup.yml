@@ -1,0 +1,36 @@
+---
+   - hosts: srv
+     become: yes
+     tasks:
+       - name: Update apt repository
+         apt:
+           update_cache: yes
+
+       - name: Install Docker
+         apt:
+           name: docker.io
+           state: present
+
+       - name: Install Docker Compose
+         apt:
+           name: python3-pip
+           state: present
+
+       - name: Install pip for Docker Compose
+         pip:
+           name: docker-compose
+
+       - name: Install GitLab Runner
+         shell: |
+           curl -L https://packages.gitlab.com/install/repo.sh | bash
+           apt install gitlab-runner -y
+
+       - name: Setup SSH keys
+         authorized_key:
+           user: your_ssh_user
+           state: present
+           key: "{{ lookup('file', 'path/to/your/public_key.pub') }}"
+
+       - name: Reboot server
+         reboot:
+           msg: "Rebooting the server after installation."
