@@ -1,5 +1,5 @@
 ---
-   - hosts: 127.0.0.1
+   - hosts: srv
      become: yes
      tasks:
        - name: Update apt repository
@@ -21,10 +21,18 @@
            name: docker-compose
 
        - name: Install GitLab Runner
-         script: gitlab-runner-install.sh
+         shell: |
+           curl -L https://packages.gitlab.com/install/repo.sh | bash
+           apt install gitlab-runner -y
+
+        - name: Copy SSH key
+          copy:
+            src: ~/.ssh/yandex_public_key.pub
+            dest: ~/.ssh/authorized_keys
+            mode: '0644'
 
        - name: Setup SSH keys
          authorized_key:
            user: ubuntu
            state: present
-           key: "{{ lookup('file', 'path/to/your/public_key.pub') }}"
+           key: ~/.ssh/yandex_public_key.pub
