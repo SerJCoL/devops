@@ -55,10 +55,6 @@ output "srv_ip" {
   value = yandex_compute_instance.srv.network_interface.0.ip_address
 }
 
-output "srv_id" {
-  yandex_vpc_network.srv_network.id
-}
-
 resource "yandex_compute_instance" "master" {
   # Конфигурация master
   name = "master"
