@@ -33,11 +33,6 @@ resource "yandex_compute_instance" "srv" {
   scheduling_policy {
     preemptible = true
   }
-  
-  provisioner "file" {
-    source      = "setup.yml"
-    destination = "/home/ubuntu/setup.yml"
-  }
 }
 
 resource "yandex_vpc_network" "srv_network" {
