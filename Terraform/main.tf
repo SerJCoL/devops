@@ -1,8 +1,9 @@
 resource "yandex_compute_instance" "srv" {
-  # Конфигурация srv
+  # Configuration srv
   name = "srv"
 
   resources {
+    core_fraction = 20
     cores  = 2
     memory = 4
   }
@@ -59,10 +60,11 @@ output "srv_id" {
 }
 
 resource "yandex_compute_instance" "master" {
-  # Конфигурация master
+  # РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ master
   name = "master"
 
   resources {
+    core_fraction = 20
     cores  = 2
     memory = 4
   }
@@ -97,6 +99,7 @@ resource "yandex_compute_instance" "app" {
   name = "app-node-${count.index}"
 
   resources {
+    core_fraction = 20  
     cores  = 2
     memory = 4
   }
