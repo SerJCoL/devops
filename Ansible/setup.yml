@@ -1,5 +1,5 @@
 ---
-   - hosts: srv
+   - hosts: 127.0.0.1
      become: yes
      tasks:
        - name: Update apt repository
@@ -25,11 +25,11 @@
            curl -L https://packages.gitlab.com/install/repo.sh | bash
            apt install gitlab-runner -y
 
-        - name: Copy SSH key
-          copy:
-            src: ~/.ssh/yandex_public_key.pub
-            dest: ~/.ssh/authorized_keys
-            mode: '0644'
+       - name: Copy SSH key
+         copy:
+           src: ~/.ssh/yandex_public_key.pub
+           dest: ~/.ssh/authorized_keys
+           mode: '0644'
 
        - name: Setup SSH keys
          authorized_key:
