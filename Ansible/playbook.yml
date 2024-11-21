@@ -20,10 +20,3 @@
   remote_user: ubuntu
   roles:
     - node_invite
-
-- name: create dashboard
-  hosts: master
-  become: yes
-  remote_user: ubuntu
-  roles:
-    - k8s_dashboard
