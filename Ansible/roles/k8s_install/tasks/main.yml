@@ -1,0 +1,60 @@
+---
+# tasks file for k8s
+- name: install k8s dependencies # устанавливаем зависимости для kubernetes
+  apt:
+    name: 
+      - ca-certificates
+      - curl
+      - apt-transport-https
+      - keepalived 
+      - haproxy
+    state: present
+    update_cache: yes
+
+- name: Prepare keyrings directory and update permissions
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  
+- name: Download Kubernetes GPG key securely
+  ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Add Kubernetes repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /"
+    state: present
+
+
+- name: install k8s # устанавливаем kubernetes
+  apt:
+    name:
+      - kubectl
+      - kubeadm
+      - kubelet
+    
+- name: restart kubelet # перезапускаем kubelet
+  service:
+    name: kubelet
+    state: restarted
+
+- name: Enable CRI plugin in containerd # замена строки на включение плагина CRI 
+  lineinfile:
+    path: /etc/containerd/config.toml
+    regexp: '^disabled_plugins'
+    line: enable_plugins=["cri"]
+    state: present
+
+- name: restart containerd # перезапускаем containerd
+  service:
+    name: containerd
+    state: restarted
+
+- name: Remove swapfile from /etc/fstab # В эти двух командах выключаем swap
+  mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  with_items:
+    - swap
+    - none
