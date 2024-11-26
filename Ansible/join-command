@@ -1,1 +1,1 @@
-kubeadm join 192.168.49.22:6443 --token md4nwm.znzpkm1vziqheqv4 --discovery-token-ca-cert-hash sha256:a4ac1e25958a406b74ab1233048bca843bfd8c3c37f484151596f80824b004c6 
+kubeadm join 192.168.49.22:6443 --token md4nwm.znzpkm1vziqheqv4 --discovery-token-ca-cert-hash "value"
