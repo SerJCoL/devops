@@ -1,0 +1,71 @@
+---
+# tasks file for k8s
+- name: install k8s dependencies # устанавливаем зависимости для kubernetes
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - apt-transport-https
+      - keepalived
+      - gnupg2
+      - haproxy
+    state: present
+    update_cache: yes
+
+- name: Remove swapfile from /etc/fstab # В эти двух командах выключаем swap
+  mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  with_items:
+    - swap
+    - none
+
+- name: Prepare keyrings directory and update permissions
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  
+- name: Download Kubernetes GPG key securely
+  ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Add Kubernetes repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /"
+    state: present
+- name: install k8s # устанавливаем kubernetes
+  apt:
+    name:
+      - kubectl
+      - kubeadm
+      - kubelet
+    
+- name: restart kubelet # перезапускаем kubelet
+  service:
+    name: kubelet
+    state: restarted
+
+- name: Creating a file with content
+  copy:
+    dest: /etc/containerd/config.toml
+    content: |
+      version = 2
+
+      [grpc]
+        address = "/run/containerd/containerd.sock"
+        uid = 0
+        gid = 0
+      
+      [plugins]
+        [plugins."io.containerd.grpc.v1.cri"]
+          sandbox_image = "registry.k8s.io/pause:3.9"
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+            runtime_type = "io.containerd.runc.v2"
+            [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+              SystemdCgroup = true
+
+- name: restart containerd # перезапускаем containerd
+  service:
+    name: containerd
+    state: restarted

@@ -1,0 +1,4 @@
+---
+# tasks file for add_role_worker
+- name: Add role worker
+  command: kubectl label node worker node-role.kubernetes.io/worker=worker
