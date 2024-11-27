@@ -1,0 +1,17 @@
+app:
+  image: "django-pg" #Укажите имя образа, который будет использоваться для сборки приложения
+  port: 3003
+  db_host: db
+  db_name: tutorial-dev
+  db_user: ubuntu
+  db_pass: password
+
+db:
+  image: "postgres:13-alpine"
+  port: 5432
+  db_name: tutorial-dev
+  db_user: ubuntu
+  db_pass: password
+
+volume:
+  name: tutorial-volume
