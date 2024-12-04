@@ -1,1 +1,0 @@
-kubeadm join "IP":6443 --token md4nwm.znzpkm1vziqheqv4 --discovery-token-ca-cert-hash "value"
