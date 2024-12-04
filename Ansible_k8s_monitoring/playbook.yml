@@ -1,0 +1,43 @@
+- name: install docker
+  hosts: [master, worker]
+  become: yes
+  remote_user: ubuntu
+  roles:
+    - docker_install
+
+- name: install kubectl
+  hosts: [master, worker]
+  become: yes
+  remote_user: ubuntu
+  roles:
+    - k8s_install
+
+- name: create cluster
+  hosts: master
+  become: yes
+  remote_user: ubuntu
+  roles:
+    - k8s_create_cluster
+
+- name: node invite
+  hosts: worker
+  become: yes
+  remote_user: ubuntu
+  roles:
+    - node_invite
+
+- name: add role worker
+  hosts: master
+  roles:
+    - add_role_worker
+
+- name: file for local-path-provisioner
+  hosts: master
+  roles:
+    - local-path-provisioner
+
+- name: Install monitoring
+  hosts: srv
+  become: yes
+  roles:
+    - monitoring
