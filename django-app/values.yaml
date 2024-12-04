@@ -1,6 +1,6 @@
 image:
-  repository: shchepelin/django-app
-  tag: "1.0.0"
+  repository: serlcol/django-app
+  tag: "1.0.4"
   persistence:
     enabled: true
     size: 1Gi
