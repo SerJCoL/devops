@@ -1,0 +1,11 @@
+---
+# vars file for monitoring
+prometheus_version: "2.44.0"
+node_exporter_version: "1.5.0"
+alertmanager_version: "0.26.0"
+blackbox_exporter_version: "0.25.0"
+grafana_version: "9.4.3"
+fluentd_gem_bin: /usr/sbin/fluent-gem
+prometheus_target_port: 24231
+login: "admin"
+pass: "$2b$12$37o/zYR/9SJsOgiqPKft/uJYW51GzRnGsqjWmeLFnCfdRzapSblrK"

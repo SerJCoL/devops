@@ -1,0 +1,61 @@
+---
+# tasks file for local-path-provisioner
+- name: Ensure pip is installed
+  become: true
+  apt:
+    name: python3-pip
+    state: present
+
+- name: Install kubernetes Python library
+  pip:
+    name: kubernetes
+    executable: pip3
+
+- name: Download local-path-storage.yaml
+  become: true
+  get_url:
+    url: https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+    dest: /tmp/local-path-storage.yaml
+
+- name: Apply local-path-storage.yaml
+  become: true
+  command: kubectl apply -f /tmp/local-path-storage.yaml --kubeconfig /home/ubuntu/.kube/config
+
+- name: Patch local-path storage class to be default
+  shell: |
+      kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  register: patch_result
+
+- name: Show patch result
+  debug:
+    msg: "{{ patch_result.stdout }}"
+
+- name: Create namespace django-app
+  command: kubectl create namespace django-app
+
+- name: Kubens namespace django-app
+  command: kubens django-app
+
+- name: Git clone stable repo
+  git:
+    repo: https://gitlab.com/shchepelin.dm/django-app.git
+    dest: /home/ubuntu/django-app
+
+- name: Install Helm chart from local directory
+  command: helm upgrade --install djnago-app ./django-app \
+    --set app.image.repository=shchepelin/django-app \
+    --set app.image.tag=1.0.0 \
+    --set app.service.port=80 \
+    --set app.service.externalIP="{{ external_ip }}" # Внешний IP в host.txt в переменной external_ip
+  args:
+    chdir: /home/ubuntu/django-app/
+    
+  
+- name: Patch the service with external IP # Локальный IP в host.txt в переменной local_ip
+  shell: |
+    kubectl patch svc {{ service_name }} -p '{"spec":{"externalIPs":["{{ local_ip }}"]}}'
+  register: patch_result
+  
+- name: Show patch result
+  debug:
+    msg: "{{ patch_result.stdout }}"
