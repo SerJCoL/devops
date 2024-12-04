@@ -1,0 +1,14 @@
+image:
+  repository: shchepelin/django-app
+  tag: "1.0.0"
+  persistence:
+    enabled: true
+    size: 1Gi
+
+postgresql:
+  username: vinhle
+  password: password
+  database: tutorial-dev
+  persistence:
+    enabled: true
+    size: 10Gi
