@@ -239,9 +239,9 @@
       receivers:
         - name: 'telegram-api'
           telegram_configs:
-          - bot_token: '7429961221:AAEUQ2XWl0xPhF6L16u5sg1OBbiLcLx9I_Q'
+          - bot_token: "id"
             api_url: 'https://api.telegram.org'
-            chat_id: 848280738
+            chat_id: "id"
             parse_mode: ''
             message: |
               {% raw %}🚨 Alertmanager 🚨
