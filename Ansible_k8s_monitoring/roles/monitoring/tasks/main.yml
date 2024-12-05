@@ -79,7 +79,7 @@
             module: [http_2xx]
           static_configs:
             - targets:
-              - http://din-it.tech
+              - 130.193.36.227
           relabel_configs:
             - source_labels: [__address__]
               target_label: __param_target
@@ -239,9 +239,9 @@
       receivers:
         - name: 'telegram-api'
           telegram_configs:
-          - bot_token: '5741443348:AAGODWlFC-FvaC8ybU61_rXMOrzpuePqACw'
+          - bot_token: '7429961221:AAEUQ2XWl0xPhF6L16u5sg1OBbiLcLx9I_Q'
             api_url: 'https://api.telegram.org'
-            chat_id: 1271362249
+            chat_id: 848280738
             parse_mode: ''
             message: |
               {% raw %}🚨 Alertmanager 🚨
