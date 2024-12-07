@@ -4,12 +4,14 @@ resource "yandex_compute_instance" "srv" {
 
   resources {
     core_fraction = 20
-    cores  = 2
-    memory = 4
+    cores  = 4
+    memory = 8
   }
 
   boot_disk {
     initialize_params {
+      type = "network-hdd"
+      size = 100
       image_id = "fd874d4jo8jbroqs6d7i"
     }
   }
@@ -50,18 +52,21 @@ output "srv_ip" {
   value = yandex_compute_instance.srv.network_interface.0.ip_address
 }
 
+
 resource "yandex_compute_instance" "master" {
-  # Конфигурация master
+  # Configuration master
   name = "master"
 
   resources {
     core_fraction = 20
-    cores  = 2
-    memory = 4
+    cores  = 4
+    memory = 8
   }
 
   boot_disk {
     initialize_params {
+      type = "network-hdd"
+      size = 50	
       image_id = "fd874d4jo8jbroqs6d7i"
     }
   }
@@ -81,6 +86,10 @@ resource "yandex_compute_instance" "master" {
     user        = "ubuntu"
     private_key = file(var.private_key_path)
   }
+
+  scheduling_policy {
+    preemptible = true
+  }
 }
 
 resource "yandex_compute_instance" "app" {
@@ -91,12 +100,14 @@ resource "yandex_compute_instance" "app" {
 
   resources {
     core_fraction = 20  
-    cores  = 2
-    memory = 4
+    cores  = 4
+    memory = 8
   }
 
   boot_disk {
     initialize_params {
+      type = "network-hdd"
+      size = 50	
       image_id = "fd874d4jo8jbroqs6d7i"
     }
   }
